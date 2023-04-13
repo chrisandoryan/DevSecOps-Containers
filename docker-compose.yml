@@ -1,0 +1,14 @@
+version: ‘3.7’
+services:
+   web:
+      build:
+         context: ./Webserver
+         dockerfile: Dockerfile
+      ports:
+         - 7001:80  
+   jenkins:
+      build:
+         context: ./Jenkins
+         dockerfile: Dockerfile
+      ports:
+         - 8080:8080
