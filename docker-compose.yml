@@ -1,11 +1,19 @@
 version: ‘3.7’
 services:
-   web:
+   web_sandbox:
       build:
-         context: ./Webserver
+         context: ./Plain-Webserver
          dockerfile: Dockerfile
       ports:
          - 7001:80  
+   sonatype_nexus:
+      image: sonatype/nexus3
+      ports:
+         - 8081:8081
+   sonarqube:
+      image: sonarqube
+      ports:
+         - 9000:9000
    jenkins:
       build:
          context: ./Jenkins
