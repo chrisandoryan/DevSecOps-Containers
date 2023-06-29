@@ -36,7 +36,7 @@ pipeline {
                 scannerHome = tool env.SONARQUBE_TOOL;
             }
             steps {
-                withSonarQubeEnv(credentialsId: env.SONARQUBE_CREDENTIALS_ID) {
+                withSonarQubeEnv(credentialsId: env.SONARQUBE_CREDENTIALS_ID, installationName: 'Strust Supervision Sonarqube') {
                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY}"
                 }
                 timeout(time: 10, unit: 'MINUTES') {
