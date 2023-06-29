@@ -6,7 +6,6 @@ pipeline {
         DOCKER_USERNAME = "chrisandoryan"
         DOCKER_IMAGE_NAME = "strustek-test-deployment"
         TARGET_SERVER_HOSTNAME = "18.140.198.207"
-        
         // Obtained from SonarQube platform when creating new project.
         SONARQUBE_PROJECT_KEY = "Strust-Supervision-Sandbox"
         
@@ -21,6 +20,7 @@ pipeline {
         TARGET_SERVER_SSH_CREDENTIALS_ID = "KIMS-POSA-Staging-Server"
         DOCKERHUB_CREDENTIALS_ID = ""
         SONARQUBE_CREDENTIALS_ID = "Strust-Supervision-Sonarqube"
+        GITHUB_CREDENTIALS_ID = "The-Questlabs-ID"
         
         // ===============================
     }
@@ -28,7 +28,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git(url: 'https://github.com/Questlabs-ID/devsecops-sandbox', branch: 'main', credentialsId: 'The-Questlabs-ID')
+                git(url: 'https://github.com/Questlabs-ID/devsecops-sandbox', branch: 'main', credentialsId: env.GITHUB_CREDENTIALS_ID)
             }
         }
         stage('Sonarqube Analysis') {
@@ -36,7 +36,7 @@ pipeline {
                 scannerHome = tool env.SONARQUBE_TOOL;
             }
             steps {
-                withSonarQubeEnv(credentialsId: env.SONARQUBE_CREDENTIALS_ID, installationName: 'Strust Supervision Sonarqube') {
+                withSonarQubeEnv(credentialsId: env.SONARQUBE_CREDENTIALS_ID) {
                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY}"
                 }
                 timeout(time: 10, unit: 'MINUTES') {

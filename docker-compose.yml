@@ -10,13 +10,16 @@ services:
       image: sonatype/nexus3
       ports:
          - 8081:8081
+      restart: always
    sonarqube:
       image: sonarqube
       ports:
          - 9000:9000
+      restart: always
    jenkins:
       build:
          context: ./Jenkins
          dockerfile: Dockerfile
       ports:
          - 8080:8080
+      restart: always
