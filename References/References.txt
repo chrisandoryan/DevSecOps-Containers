@@ -2,3 +2,6 @@ Jenkins Sonarqube Integration
 https://docs.sonarqube.org/9.7/analyzing-source-code/ci-integration/jenkins-integration/
 https://automationqahub.com/how-to-integrate-sonarqube-with-jenkins/
 https://docs.cloudbees.com/docs/cloudbees-ci/latest/traditional-admin-guide/github-app-auth
+
+Deploy Private Docker Registry
+https://gcore.com/learning/4-easy-steps-to-set-up-a-private-docker-registry-on-ubuntu/
