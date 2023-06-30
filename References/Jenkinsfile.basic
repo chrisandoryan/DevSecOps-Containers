@@ -3,9 +3,12 @@ pipeline {
 
     environment {
         GIT_COMMIT_SHORT = "${sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()}"
-        DOCKER_USERNAME = "chrisandoryan"
+        DOCKER_USERNAME = "strust"
         DOCKER_IMAGE_NAME = "strustek-test-deployment"
-        TARGET_SERVER_HOSTNAME = "18.140.198.207"
+        DOCKER_REGISTRY = "https://registry.strust.id"
+
+        TARGET_SERVER = "18.140.198.207"
+
         // Obtained from SonarQube platform when creating new project.
         SONARQUBE_PROJECT_KEY = "Strust-Supervision-Sandbox"
         
@@ -18,7 +21,7 @@ pipeline {
         // ===== Jenkins Credentials =====
         // Obtained from Manage Jenkins > Credentials
         TARGET_SERVER_SSH_CREDENTIALS_ID = "KIMS-POSA-Staging-Server"
-        DOCKERHUB_CREDENTIALS_ID = ""
+        DOCKERHUB_CREDENTIALS_ID = "Strust-Docker-Registry"
         SONARQUBE_CREDENTIALS_ID = "Strust-Supervision-Sonarqube"
         GITHUB_CREDENTIALS_ID = "The-Questlabs-ID"
         
@@ -89,8 +92,8 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([string(credentialsId: env.DOCKERHUB_CREDENTIALS_ID, variable: 'DOCKERHUB_TOKEN')]) {
-                    sh "echo '${DOCKERHUB_TOKEN}' | docker login -u ${env.DOCKER_USERNAME} --password-stdin"
+                withCredentials([string(credentialsId: env.DOCKERHUB_CREDENTIALS_ID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh "echo $PASSWORD | docker login -u ${env.DOCKER_USERNAME} --password-stdin ${env.DOCKER_REGISTRY}"
                     sh "docker push ${env.DOCKER_USERNAME}/${env.DOCKER_IMAGE_NAME}:${env.GIT_COMMIT_SHORT}"
                 }
             }
@@ -100,8 +103,8 @@ pipeline {
             steps {
                 sshagent([env.TARGET_SERVER_SSH_CREDENTIALS_ID]) {
                     // Replace 'your-deployment-server' with your server's IP or domain
-                    sh "ssh ${env.TARGET_SERVER_HOSTNAME} 'docker pull ${env.DOCKER_USERNAME}/${env.DOCKER_IMAGE_NAME}:${env.GIT_COMMIT_SHORT}'"
-                    sh "ssh ${env.TARGET_SERVER_HOSTNAME} 'docker-compose down && docker-compose up -d --force-recreate'"
+                    sh "ssh ${env.TARGET_SERVER} 'docker pull ${env.DOCKER_USERNAME}/${env.DOCKER_IMAGE_NAME}:${env.GIT_COMMIT_SHORT}'"
+                    sh "ssh ${env.TARGET_SERVER} 'docker-compose down && docker-compose up -d --force-recreate'"
                 }
             }
         }
