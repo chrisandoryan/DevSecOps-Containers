@@ -1,7 +1,7 @@
 FROM httpd
 
 RUN apt update
-RUN apt install openssh-server -y
+RUN apt install openssh-server sshpass -y
 RUN mkdir -p /var/run/sshd
 
 # authorize SSH connection with root account
