@@ -6,11 +6,11 @@ services:
          dockerfile: Dockerfile
       ports:
          - 7001:80  
-   sonatype_nexus:
-      image: sonatype/nexus3
-      ports:
-         - 8081:8081
-      restart: always
+   # sonatype_nexus:
+   #    image: sonatype/nexus3
+   #    ports:
+   #       - 8081:8081
+   #    restart: always
    sonarqube:
       image: sonarqube
       ports:
